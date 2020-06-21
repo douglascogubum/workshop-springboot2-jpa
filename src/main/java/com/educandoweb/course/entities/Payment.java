@@ -1,38 +1,38 @@
 package com.educandoweb.course.entities;
 
 import java.io.Serializable;
-import java.util.HashSet;
-import java.util.Set;
+import java.time.Instant;
 
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.ManyToMany;
+import javax.persistence.MapsId;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
 @Entity
-@Table(name = "tb_category")
-public class Category implements Serializable{
+@Table(name = "tb_payment")
+public class Payment implements Serializable{
 	private static final long serialVersionUID = 1L;
+	
+	@OneToOne
+	@MapsId
+	private Order order;
 	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long id;
-	private String name;
+	private Instant date;
 	
-	@JsonIgnore
-	@ManyToMany(mappedBy = "categories")
-	private Set<Product> products = new HashSet<>();
-
-	public Category() {
+	public Payment() {
 	}
 
-	public Category(Long id, String name) {
+	public Payment(Long id, Instant date, Order order) {
+		super();
 		this.id = id;
-		this.name = name;
+		this.date = date;
+		this.order = order;
 	}
 
 	public Long getId() {
@@ -43,16 +43,20 @@ public class Category implements Serializable{
 		this.id = id;
 	}
 
-	public String getName() {
-		return name;
+	public Instant getDate() {
+		return date;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setDate(Instant date) {
+		this.date = date;
 	}
 	
-	public Set<Product> getProducts() {
-		return products;
+	public Order getOrder() {
+		return order;
+	}
+
+	public void setOrder(Order order) {
+		this.order = order;
 	}
 
 	@Override
@@ -71,12 +75,12 @@ public class Category implements Serializable{
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Category other = (Category) obj;
+		Payment other = (Payment) obj;
 		if (id == null) {
 			if (other.id != null)
 				return false;
 		} else if (!id.equals(other.id))
 			return false;
 		return true;
-	}
+	}	
 }
